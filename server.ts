@@ -65,6 +65,26 @@ app.post("/", async (req, res) => {
   }
 });
 
+app.get("/top", async (req, res) => {
+  const dbres = await client.query(
+    "SELECT * FROM votes ORDER BY vote_count DESC LIMIT 3"
+  );
+
+  const dogData = await dbres.rows;
+
+  if (dogData) {
+    res.status(200).json({
+      status: "success",
+      dogData,
+    });
+  } else {
+    res.status(404).json({
+      status: "fail",
+      data: "failed to fetch dog votes data",
+    });
+  }
+});
+
 //Start the server on the given port
 const port = process.env.PORT;
 if (!port) {
